@@ -1,9 +1,15 @@
 [package]
 name = "spinlock"
-version = "0.1.0"
+description = "A no_std Spinlock implementation."
+repository = "https://github.com/trayzen/spinlock"
+version = "0.0.1"
 authors = ["TrAyZeN"]
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
+license = "MIT"
+keywords = [
+    "lock",
+    "no-std",
+]
+categories = [
+    "no-std",
+]
