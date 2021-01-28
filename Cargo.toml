@@ -1,6 +1,6 @@
 [package]
 name = "spinlock"
-description = "A no_std Spinlock implementation."
+description = "no_std synchronization primitives using spinlock."
 repository = "https://github.com/trayzen/spinlock"
 version = "0.0.1"
 authors = ["TrAyZeN"]

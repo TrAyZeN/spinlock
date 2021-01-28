@@ -2,7 +2,7 @@
     spinlock
 </h1>
 
-> A no_std Spinlock implementation
+> no_std synchonization primitives using spinlock.
 
 **⚠️ Disclaimer ⚠️**: This implementation is for learning purposes if you want to use a spinlock use the crate [`spin-rs`](https://github.com/mvdnes/spin-rs) instead.
 
@@ -11,6 +11,11 @@
 <div style="text-align: right; font-style: italic">
     From <a href="https://en.wikipedia.org/wiki/Spinlock">wikipedia</a>.
 </div>
+
+## Roadmap
+- [x] Mutex
+- [ ] RwLock
+- [ ] Handle panicking
 
 ## Useful links
 - https://rigtorp.se/spinlock/
