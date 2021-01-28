@@ -88,8 +88,8 @@ impl<T> Mutex<T> {
         }
     }
 
-    /// This function is unsafe if forcing to unlock while a guard is still
-    /// held.
+    /// This function is unsafe if forcing to unlock while a guard is still held.
+    #[inline(always)]
     unsafe fn unlock(&self) {
         // Memory order acquire is used to make sure no reordering happens before it.
         self.lock.store(false, Ordering::Release);

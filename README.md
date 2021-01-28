@@ -8,9 +8,8 @@
 
 ## What is a spinlock ?
 > In software engineering, a spinlock is a lock which causes a thread trying to acquire it to simply wait in a loop ("spin") while repeatedly checking if the lock is available.
-<div style="text-align: right; font-style: italic">
-    From <a href="https://en.wikipedia.org/wiki/Spinlock">wikipedia</a>.
-</div>
+
+*From [wikipedia](https://en.wikipedia.org/wiki/Spinlock).*
 
 ## Roadmap
 - [x] Mutex
@@ -18,6 +17,6 @@
 - [ ] Handle panicking
 
 ## Useful links
-- https://rigtorp.se/spinlock/
-- https://www.internalpointers.com/post/gentle-introduction-multithreading
-- https://doc.rust-lang.org/nomicon/concurrency.html
+- [Correctly implementing a spinlock in C++](https://rigtorp.se/spinlock/)
+- [The black art of concurrency](https://www.internalpointers.com/post-group/black-art-concurrency)
+- [Nomicon chapter on concurrency](https://doc.rust-lang.org/nomicon/concurrency.html)

@@ -1,4 +1,4 @@
-//! A `no_std` Spinlock implementation.
+//! `no_std` synchronization primitives using spinlock.
 #![warn(
     missing_docs,
     rust_2018_idioms,
