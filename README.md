@@ -13,7 +13,7 @@
 
 ## Roadmap
 - [x] Mutex
-- [ ] RwLock
+- [x] RwLock
 - [ ] Handle panicking
 
 ## Useful links
