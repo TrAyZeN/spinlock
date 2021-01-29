@@ -4,6 +4,22 @@ use std::sync::Arc;
 use std::thread;
 
 #[test]
+fn try_lock_on_unlocked() {
+    let mutex = Mutex::new(0);
+
+    assert!(mutex.try_lock().is_some());
+}
+
+#[test]
+fn try_lock_on_locked() {
+    let mutex = Mutex::new(0);
+
+    let _guard = mutex.lock();
+
+    assert!(mutex.try_lock().is_none());
+}
+
+#[test]
 fn two_threads_count() {
     let count = Arc::new(Mutex::new(0));
 
