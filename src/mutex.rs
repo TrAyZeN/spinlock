@@ -1,16 +1,19 @@
 use core::cell::UnsafeCell;
-use core::fmt::{self, Debug, Formatter};
 use core::hint;
 use core::ops::{Deref, DerefMut};
 use core::sync::atomic::{AtomicBool, Ordering};
 
-/// A synchronization primitive using Spinlock as locking mechanism
-/// causing the thread trying to acquire the lock to spin.
+/// A mutual exclusion synchronization primitive.
+///
+/// This primitive allows only one thread to access the data at a time.
+/// It is using Spinlock as locking mechanism causing the thread trying
+/// to acquire the lock to spin.
 ///
 /// This structure provides interior mutability and prevents multiple
 /// threads to access the data at the same time.
+#[derive(Debug)]
 pub struct Mutex<T> {
-    // Inner data contained by the mutex.
+    // Inner data contained in the mutex.
     data: UnsafeCell<T>,
     // Is the lock held by a thread.
     lock: AtomicBool,
@@ -34,7 +37,7 @@ impl<T> Mutex<T> {
         }
     }
 
-    /// Acquires the lock, causing the current thread spinning until the lock is available.
+    /// Acquires the lock, blocking the current thread until the lock is available.
     ///
     /// This functions block the current thread until the lock is available.
     ///
@@ -88,7 +91,8 @@ impl<T> Mutex<T> {
         }
     }
 
-    /// This function is unsafe if forcing to unlock while a guard is still held.
+    /// UNSAFE: forcing to unlock while a guard is still held may allow to have mutliple guards.
+    #[allow(clippy::inline_always)]
     #[inline(always)]
     unsafe fn unlock(&self) {
         // Memory order acquire is used to make sure no reordering happens before it.
@@ -100,29 +104,16 @@ impl<T: Default> Default for Mutex<T> {
     /// Creates a `Mutex<T>` which is unlocked containing the default of `T`.
     #[inline]
     fn default() -> Self {
-        Self {
-            data: UnsafeCell::new(T::default()),
-            lock: AtomicBool::new(false),
-        }
+        Self::new(T::default())
     }
 }
 
-impl<T: Debug> Debug for Mutex<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Mutex")
-            .field("data", &self.data)
-            .field("lock", &self.lock)
-            .finish()
-    }
-}
-
-unsafe impl<T: Send> Send for Mutex<T> {}
-
-/// The Spinlock mechanism makes the Mutex Sync.
+// SAFETY: It is safe to impl Sync since the locking mechanism ensures the synchronization.
 unsafe impl<T: Sync> Sync for Mutex<T> {}
 
 /// This structure is created by calling [`lock`](self::Mutex::lock)
 /// or [`try_lock`](self::Mutex::try_lock) on [`Mutex`](self::Mutex).
+#[derive(Debug)]
 pub struct MutexGuard<'mutex, T> {
     mutex: &'mutex Mutex<T>,
 }
@@ -141,7 +132,7 @@ impl<T> Deref for MutexGuard<'_, T> {
 
     #[inline]
     fn deref(&self) -> &Self::Target {
-        // UNSAFE: A guard is only created if no one holds the lock meaning that
+        // SAFETY: A guard is only created if no one holds the lock meaning that
         // no one else can modify the data so it is safe to get reference to the
         // data for the lifetime of the guard.
         unsafe { &*self.mutex.data.get() }
@@ -151,7 +142,7 @@ impl<T> Deref for MutexGuard<'_, T> {
 impl<T> DerefMut for MutexGuard<'_, T> {
     #[inline]
     fn deref_mut(&mut self) -> &mut Self::Target {
-        // UNSAFE: A guard is only created if no one holds the lock meaning that
+        // SAFETY: A guard is only created if no one holds the lock meaning that
         // no one else can modify the data so it is safe to get a mutable reference
         // to the data for the lifetime of the guard.
         unsafe { &mut *self.mutex.data.get() }
@@ -161,18 +152,10 @@ impl<T> DerefMut for MutexGuard<'_, T> {
 impl<T> Drop for MutexGuard<'_, T> {
     #[inline]
     fn drop(&mut self) {
-        // UNSAFE: It is only possible that one guard exists for a certain mutex
+        // SAFETY: It is only possible that one guard exists for a certain mutex
         // which is the current one so it is safe to unlock the mutex when the
         // guard gets dropped.
         unsafe { self.mutex.unlock() }
-    }
-}
-
-impl<T: Debug> Debug for MutexGuard<'_, T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        f.debug_struct("MutexGuard")
-            .field("mutex", &self.mutex)
-            .finish()
     }
 }
 
