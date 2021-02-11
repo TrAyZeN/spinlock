@@ -49,7 +49,7 @@ fn try_write_on_locked() {
 fn two_threads_count() {
     let count = Arc::new(RwLock::new(0));
 
-    let count1 = count.clone();
+    let count1 = Arc::clone(&count);
     let thread1 = thread::spawn(move || {
         for _ in 0..1_000_000 {
             *count1.write() += 1;
@@ -58,7 +58,7 @@ fn two_threads_count() {
         assert!(*count1.read() >= 1_000_000);
     });
 
-    let count2 = count.clone();
+    let count2 = Arc::clone(&count);
     let thread2 = thread::spawn(move || {
         for _ in 0..1_000_000 {
             *count2.write() += 1;

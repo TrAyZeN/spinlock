@@ -51,7 +51,7 @@ impl<T> RwLock<T> {
     /// use std::sync::Arc;
     ///
     /// let rwlock = Arc::new(RwLock::new(1));
-    /// let r = rwlock.clone();
+    /// let r = Arc::clone(&rwlock);
     ///
     /// thread::spawn(move || {
     ///     assert_eq!(*r.read(), 1);
@@ -113,7 +113,7 @@ impl<T> RwLock<T> {
     /// use std::sync::Arc;
     ///
     /// let rwlock = Arc::new(RwLock::new(1));
-    /// let r = rwlock.clone();
+    /// let r = Arc::clone(&rwlock);
     ///
     /// thread::spawn(move || {
     ///     *r.write() = 42;

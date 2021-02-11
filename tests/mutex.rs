@@ -23,14 +23,14 @@ fn try_lock_on_locked() {
 fn two_threads_count() {
     let count = Arc::new(Mutex::new(0));
 
-    let count1 = count.clone();
+    let count1 = Arc::clone(&count);
     let thread1 = thread::spawn(move || {
         for _ in 0..1_000_000 {
             *count1.lock() += 1;
         }
     });
 
-    let count2 = count.clone();
+    let count2 = Arc::clone(&count);
     let thread2 = thread::spawn(move || {
         for _ in 0..1_000_000 {
             *count2.lock() += 1;
@@ -47,14 +47,14 @@ fn two_threads_count() {
 fn two_threads_try_count() {
     let count = Arc::new(Mutex::new(0));
 
-    let count1 = count.clone();
+    let count1 = Arc::clone(&count);
     let thread1 = thread::spawn(move || {
         for _ in 0..1_000_000 {
             *count1.lock() += 1;
         }
     });
 
-    let count2 = count.clone();
+    let count2 = Arc::clone(&count);
     let thread2 = thread::spawn(move || {
         let mut acc = 1;
         let mut num_fails = 0;

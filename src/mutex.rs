@@ -48,7 +48,7 @@ impl<T> Mutex<T> {
     /// use std::sync::Arc;
     ///
     /// let mutex = Arc::new(Mutex::new(1));
-    /// let m = mutex.clone();
+    /// let m = Arc::clone(&mutex);
     ///
     /// thread::spawn(move || {
     ///     *m.lock() = 42;
