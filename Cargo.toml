@@ -4,7 +4,7 @@ description = "no_std synchronization primitives using spinlock."
 repository = "https://github.com/trayzen/spinlock"
 version = "0.0.1"
 authors = ["TrAyZeN"]
-edition = "2018"
+edition = "2021"
 license = "MIT"
 keywords = [
     "lock",
